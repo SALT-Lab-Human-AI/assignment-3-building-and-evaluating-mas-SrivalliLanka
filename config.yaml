@@ -5,7 +5,7 @@ system:
   name: "Multi-Agent Research Assistant"
   topic: "HCI Research"  # Change this to your chosen topic
   max_iterations: 10
-  timeout_seconds: 300
+  timeout_seconds: 180  # Reduced to 3 minutes for faster feedback
 
 agents:
   planner:
@@ -62,30 +62,30 @@ agents:
     #   Say "APPROVED - RESEARCH COMPLETE" or "NEEDS REVISION".
 
 models:
-  # Default model for agents (Groq)
+  # Default model for agents (OpenAI)
   default:
-    provider: "vllm"
-    name: "openai/gpt-oss-20b"
+    provider: "openai"
+    name: "gpt-4o-mini"
     temperature: 0.7
-    max_tokens: 2048
+    max_tokens: 512  # Reduced from 2048 for efficient 6-query evaluation
 
   # Judge model for evaluation
   judge:
-    provider: "vllm"
-    name: "openai/gpt-oss-20b"
+    provider: "openai"
+    name: "gpt-4o-mini"
     temperature: 0.3
-    max_tokens: 1024
+    max_tokens: 256  # Reduced from 1024 for efficient 6-query evaluation
 
 tools:
   web_search:
     enabled: true
     provider: "tavily"  # or "brave"
-    max_results: 5
+    max_results: 3  # Reduced from 5 for efficient 6-query evaluation
 
   paper_search:
     enabled: true
     provider: "semantic_scholar"
-    max_results: 10
+    max_results: 5  # Reduced from 10 for efficient 6-query evaluation
 
   citation_extraction:
     enabled: true
@@ -109,7 +109,7 @@ safety:
 
 evaluation:
   enabled: true
-  num_test_queries: 10
+  num_test_queries: 6  # Set to 6 to meet "more than 5 queries" requirement
 
   # Judge criteria
   criteria:

@@ -18,6 +18,33 @@ from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.messages import TextMessage
 
 from src.agents.autogen_agents import create_research_team
+from src.guardrails.safety_manager import SafetyManager
+
+
+def _run_async_in_thread(coro):
+    """
+    Helper to run async code in a new event loop in a thread.
+    
+    This creates a completely isolated event loop to avoid binding conflicts
+    with AutoGen's internal async queues and tasks.
+    """
+    # Create a new event loop for this thread
+    new_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(new_loop)
+    try:
+        return new_loop.run_until_complete(coro)
+    finally:
+        # Clean up: cancel all pending tasks
+        try:
+            pending = asyncio.all_tasks(new_loop)
+            for task in pending:
+                task.cancel()
+            if pending:
+                new_loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+        except Exception:
+            pass
+        finally:
+            new_loop.close()
 
 
 class AutoGenOrchestrator:
@@ -39,16 +66,48 @@ class AutoGenOrchestrator:
         self.config = config
         self.logger = logging.getLogger("autogen_orchestrator")
         
-        # Create the research team
-        self.logger.info("Creating research team...")
-        self.team = create_research_team(config)
+        # Initialize safety manager
+        safety_config = config.get("safety", {})
+        self.safety_manager = SafetyManager(safety_config) if safety_config.get("enabled", True) else None
+        if self.safety_manager:
+            self.logger.info("Safety manager initialized")
         
-        self.logger.info("Research team created successfully")
+        # Don't create team in __init__ - create it lazily in async context
+        # This prevents event loop binding issues when running in threads
+        self._team = None
         
         # Workflow trace for debugging and UI display
         self.workflow_trace: List[Dict[str, Any]] = []
+    
+    async def _get_team_async(self):
+        """
+        Get or create the research team in the current async context.
+        Creates the team lazily to avoid event loop binding issues.
+        
+        This ensures the team is always created in the same event loop
+        where it will be used, preventing "bound to different event loop" errors.
+        
+        Returns:
+            RoundRobinGroupChat team instance
+        """
+        # Always recreate team in async context to ensure correct event loop binding
+        # This is necessary because AutoGen's internal queues are bound to the event loop
+        # where the team is created
+        self.logger.info("Creating research team in current event loop context...")
+        try:
+            team = create_research_team(self.config)
+            self.logger.info("Research team created successfully")
+            return team
+        except ValueError as e:
+            error_msg = f"Failed to create research team: {e}"
+            self.logger.error(error_msg)
+            raise ValueError(error_msg) from e
+        except Exception as e:
+            error_msg = f"Unexpected error creating research team: {e}"
+            self.logger.error(error_msg, exc_info=True)
+            raise RuntimeError(error_msg) from e
 
-    def process_query(self, query: str, max_rounds: int = 20) -> Dict[str, Any]:
+    def process_query(self, query: str, max_rounds: int = 10) -> Dict[str, Any]:
         """
         Process a research query through the multi-agent system.
 
@@ -62,43 +121,113 @@ class AutoGenOrchestrator:
             - response: Final synthesized response
             - conversation_history: Full conversation between agents
             - metadata: Additional information about the process
+            - safety_events: Safety events if any
         """
         self.logger.info(f"Processing query: {query}")
         
+        # Check input safety
+        if self.safety_manager:
+            input_safety = self.safety_manager.check_input_safety(query)
+            if not input_safety.get("safe", True):
+                violations = input_safety.get("violations", [])
+                self.logger.warning(f"Input safety check failed: {violations}")
+                
+                # Return refusal message
+                return {
+                    "query": query,
+                    "response": self.safety_manager.on_violation.get(
+                        "message",
+                        "I cannot process this request due to safety policies."
+                    ),
+                    "conversation_history": [],
+                    "metadata": {
+                        "safety_blocked": True,
+                        "safety_violations": violations,
+                        "num_messages": 0,
+                        "num_sources": 0
+                    },
+                    "safety_events": [{
+                        "type": "input",
+                        "safe": False,
+                        "violations": violations
+                    }]
+                }
+        
         try:
             # Run the async query processing
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                # If we're already in an async context, create a new loop
-                import concurrent.futures
-                with concurrent.futures.ThreadPoolExecutor() as pool:
-                    result = pool.submit(
-                        asyncio.run, 
-                        self._process_query_async(query, max_rounds)
-                    ).result()
-            else:
-                result = loop.run_until_complete(self._process_query_async(query, max_rounds))
+            # Always use asyncio.run() to create a fresh event loop
+            # This ensures the team is created in the same event loop where it runs
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    # If we're already in an async context (e.g., Streamlit), 
+                    # we need to run in a separate thread with a new event loop
+                    import concurrent.futures
+                    with concurrent.futures.ThreadPoolExecutor() as pool:
+                        future = pool.submit(_run_async_in_thread, self._process_query_async(query, max_rounds))
+                        result = future.result(timeout=self.config.get("system", {}).get("timeout_seconds", 300) + 60)
+                else:
+                    # No running loop, but one exists - use asyncio.run() to create fresh
+                    result = asyncio.run(self._process_query_async(query, max_rounds))
+            except RuntimeError:
+                # No event loop exists, create a new one with asyncio.run()
+                result = asyncio.run(self._process_query_async(query, max_rounds))
+            
+            # Check output safety
+            if self.safety_manager and "response" in result:
+                output_safety = self.safety_manager.check_output_safety(
+                    result.get("response", ""),
+                    result.get("metadata", {}).get("sources", [])
+                )
+                
+                if not output_safety.get("safe", True):
+                    violations = output_safety.get("violations", [])
+                    self.logger.warning(f"Output safety check failed: {violations}")
+                    
+                    # Update response based on safety action
+                    result["response"] = output_safety.get("response", result.get("response", ""))
+                    result["metadata"]["safety_blocked"] = True
+                    result["metadata"]["safety_violations"] = violations
+                
+                # Add safety events to metadata
+                safety_events = self.safety_manager.get_safety_events()
+                if safety_events:
+                    result["safety_events"] = safety_events[-5:]  # Last 5 events
+                    result["metadata"]["safety_events"] = safety_events[-5:]
             
             self.logger.info("Query processing complete")
             return result
             
-        except Exception as e:
-            self.logger.error(f"Error processing query: {e}", exc_info=True)
+        except ValueError as e:
+            # API connection or configuration errors
+            error_msg = str(e)
+            self.logger.error(f"Configuration/API error: {error_msg}", exc_info=True)
             return {
                 "query": query,
-                "error": str(e),
-                "response": f"An error occurred while processing your query: {str(e)}",
+                "error": error_msg,
+                "response": f"API connection error: {error_msg}. Please check your API keys and configuration.",
                 "conversation_history": [],
-                "metadata": {"error": True}
+                "metadata": {"error": True, "error_type": "api_connection"}
+            }
+        except Exception as e:
+            # Other errors
+            error_msg = str(e)
+            self.logger.error(f"Error processing query: {error_msg}", exc_info=True)
+            return {
+                "query": query,
+                "error": error_msg,
+                "response": f"An error occurred while processing your query: {error_msg}",
+                "conversation_history": [],
+                "metadata": {"error": True, "error_type": "orchestrator_error"}
             }
     
-    async def _process_query_async(self, query: str, max_rounds: int = 20) -> Dict[str, Any]:
+    async def _process_query_async(self, query: str, max_rounds: int = 10) -> Dict[str, Any]:
         """
         Async implementation of query processing.
         
         Args:
             query: The research question to answer
-            max_rounds: Maximum number of conversation rounds
+            max_rounds: Maximum number of conversation rounds (default 10 for faster processing)
             
         Returns:
             Dictionary containing results
@@ -112,17 +241,61 @@ Please work together to answer this query comprehensively:
 3. Writer: Synthesize findings into a well-cited response
 4. Critic: Evaluate the quality and provide feedback"""
         
-        # Run the team
-        result = await self.team.run(task=task_message)
+        # Get or create team in this async context (lazy creation)
+        # This ensures the team is bound to the current event loop
+        # We create it fresh each time to avoid event loop binding issues
+        team = await self._get_team_async()
+        
+        # Run the team with timeout
+        try:
+            # Add timeout to prevent infinite execution
+            timeout_seconds = self.config.get("system", {}).get("timeout_seconds", 300)
+            result = await asyncio.wait_for(
+                team.run(task=task_message),
+                timeout=timeout_seconds
+            )
+        except asyncio.TimeoutError:
+            error_msg = f"Query processing timed out after {timeout_seconds} seconds"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg)
+        except Exception as e:
+            error_msg = f"Error during team execution: {str(e)}"
+            self.logger.error(error_msg, exc_info=True)
+            # Re-raise with more context
+            if "api" in str(e).lower() or "connection" in str(e).lower() or "key" in str(e).lower():
+                raise ValueError(f"API connection error: {e}") from e
+            raise RuntimeError(error_msg) from e
         
         # Extract conversation history
         messages = []
-        async for message in result.messages:
-            msg_dict = {
-                "source": message.source,
-                "content": message.content if hasattr(message, 'content') else str(message),
-            }
-            messages.append(msg_dict)
+        # result.messages might be a list or an async iterator
+        if hasattr(result.messages, '__aiter__'):
+            # It's an async iterator
+            async for message in result.messages:
+                msg_dict = {
+                    "source": message.source,
+                    "content": message.content if hasattr(message, 'content') else str(message),
+                }
+                messages.append(msg_dict)
+        else:
+            # It's a regular list/iterable
+            for message in result.messages:
+                msg_dict = {
+                    "source": message.source,
+                    "content": message.content if hasattr(message, 'content') else str(message),
+                }
+                messages.append(msg_dict)
+        
+        # Limit conversation history to prevent context length issues
+        # Keep only the most recent messages (last 20 messages max)
+        max_messages = 20  # Reduced from 50 for efficient 6-query evaluation
+        if len(messages) > max_messages:
+            self.logger.warning(
+                f"Conversation history too long ({len(messages)} messages), "
+                f"keeping only last {max_messages} messages"
+            )
+            # Keep first message (query) and last N messages
+            messages = [messages[0]] + messages[-max_messages+1:]
         
         # Extract final response
         final_response = ""

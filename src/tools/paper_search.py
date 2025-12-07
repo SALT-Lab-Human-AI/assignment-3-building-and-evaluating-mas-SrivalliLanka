@@ -85,17 +85,31 @@ class PaperSearchTool:
                 "citationCount", "url", "venue", "openAccessPdf"
             ])
             
-            # Perform search
+            # Perform search with strict limit
+            # Note: search_paper returns an iterator, so we need to limit it
             results = sch.search_paper(
                 query, 
-                limit=self.max_results,
+                limit=min(self.max_results, 50),  # Cap at 50 to avoid excessive API calls
                 fields=fields
             )
             
-            # Parse and filter results
-            papers = self._parse_results(results, year_from, year_to, min_citations)
+            # Convert iterator to list and limit immediately
+            # This prevents the library from fetching more than needed
+            results_list = []
+            count = 0
+            for paper in results:
+                if count >= self.max_results:
+                    break
+                results_list.append(paper)
+                count += 1
             
-            self.logger.info(f"Found {len(papers)} papers")
+            # Parse and filter results
+            papers = self._parse_results(results_list, year_from, year_to, min_citations)
+            
+            # Further limit to max_results after filtering
+            papers = papers[:self.max_results]
+            
+            self.logger.info(f"Found {len(papers)} papers (limited to {self.max_results})")
             return papers
             
         except ImportError:
@@ -207,7 +221,7 @@ class PaperSearchTool:
         Parse and filter search results from Semantic Scholar.
         
         Args:
-            results: Raw results from Semantic Scholar API
+            results: List of paper objects from Semantic Scholar API (already limited)
             year_from: Minimum year filter
             year_to: Maximum year filter
             min_citations: Minimum citation count filter
@@ -217,6 +231,7 @@ class PaperSearchTool:
         """
         papers = []
         
+        # results should already be a list (not an iterator) after our fix
         for paper in results:
             # Skip papers without basic metadata
             if not paper or not hasattr(paper, 'title'):
@@ -279,7 +294,20 @@ def paper_search(query: str, max_results: int = 10, year_from: Optional[int] = N
         Formatted string with paper results
     """
     tool = PaperSearchTool(max_results=max_results)
-    results = asyncio.run(tool.search(query, year_from=year_from))
+    # Handle both sync and async contexts
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # If we're in an async context, create a new event loop in a thread
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(_run_async_in_thread, tool.search(query, year_from=year_from))
+                results = future.result()
+        else:
+            results = loop.run_until_complete(tool.search(query, year_from=year_from))
+    except RuntimeError:
+        # No event loop exists, create a new one
+        results = asyncio.run(tool.search(query, year_from=year_from))
     
     if not results:
         return "No academic papers found."
@@ -307,3 +335,14 @@ def paper_search(query: str, max_results: int = 10, year_from: Optional[int] = N
         output += "\n"
     
     return output
+
+
+def _run_async_in_thread(coro):
+    """Helper to run async code in a new event loop in a thread."""
+    import asyncio
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()

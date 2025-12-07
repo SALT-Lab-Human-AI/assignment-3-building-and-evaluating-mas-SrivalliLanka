@@ -32,56 +32,52 @@ def create_model_client(config: Dict[str, Any]) -> OpenAIChatCompletionClient:
         OpenAIChatCompletionClient configured for the specified provider
     """
     model_config = config.get("models", {}).get("default", {})
-    provider = model_config.get("provider", "groq")
-    
-    # Groq configuration (uses OpenAI-compatible API)
-    if provider == "groq":
-        api_key = os.getenv("GROQ_API_KEY")
-        if not api_key:
-            raise ValueError("GROQ_API_KEY not found in environment")
-        
-        return OpenAIChatCompletionClient(
-            model=model_config.get("name", "llama-3.3-70b-versatile"),
-            api_key=api_key,
-            base_url="https://api.groq.com/openai/v1",
-            model_capabilities={
-                "json_output": False,
-                "vision": False,
-                "function_calling": True,
-            }
-        )
+    provider = model_config.get("provider", "openai")
     
     # OpenAI configuration
-    elif provider == "openai":
+    if provider == "openai":
         api_key = os.getenv("OPENAI_API_KEY")
         base_url = os.getenv("OPENAI_BASE_URL")
         if not api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment")
+            raise ValueError("OPENAI_API_KEY not found in environment. Please set it in your .env file or environment variables.")
         
-        return OpenAIChatCompletionClient(
-            model=model_config.get("name", "gpt-4o-mini"),
-            api_key=api_key,
-            base_url=base_url,
-        )
+        # Only include base_url if it's set and not empty
+        client_kwargs = {
+            "model": model_config.get("name", "gpt-4o-mini"),
+            "api_key": api_key,
+        }
+        if base_url and base_url.strip():
+            client_kwargs["base_url"] = base_url
+        
+        try:
+            return OpenAIChatCompletionClient(**client_kwargs)
+        except Exception as e:
+            raise ValueError(f"Failed to create OpenAI client: {e}. Check your API key and base_url configuration.") from e
 
     elif provider == "vllm":
         api_key = os.getenv("OPENAI_API_KEY")
         base_url = os.getenv("OPENAI_BASE_URL")
         if not api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment")
+            raise ValueError("OPENAI_API_KEY not found in environment. Please set it in your .env file or environment variables.")
         
-        return OpenAIChatCompletionClient(
-            model=model_config.get("name", "gpt-4o-mini"),
-            api_key=api_key,
-            base_url=base_url,
-            model_info={
-                "vision": False,
-                "function_calling": True,
-                "json_output": True,
-                "family": ModelFamily.GPT_4O,
-                "structured_output": True,
-            },
-        )
+        if not base_url or not base_url.strip():
+            raise ValueError("OPENAI_BASE_URL is required for vllm provider. Please set it in your .env file.")
+        
+        try:
+            return OpenAIChatCompletionClient(
+                model=model_config.get("name", "gpt-4o-mini"),
+                api_key=api_key,
+                base_url=base_url,
+                model_info={
+                    "vision": False,
+                    "function_calling": True,
+                    "json_output": True,
+                    "family": ModelFamily.GPT_4O,
+                    "structured_output": True,
+                },
+            )
+        except Exception as e:
+            raise ValueError(f"Failed to create vLLM client: {e}. Check your API key and base_url configuration.") from e
     
     else:
         raise ValueError(f"Unsupported provider: {provider}")
@@ -156,7 +152,9 @@ You have access to tools for web search and paper search. When conducting resear
 2. Look for recent, high-quality sources
 3. Extract key findings, quotes, and data
 4. Note all source URLs and citations
-5. Gather evidence that directly addresses the research query"""
+5. Gather evidence that directly addresses the research query
+6. IMPORTANT: Limit your searches - use paper_search with max_results=10 at most, and web_search with max_results=5. Do NOT make excessive API calls.
+7. After gathering sufficient information (5-10 sources total), summarize your findings and move to the next step."""
 
     # Use custom prompt from config if available
     custom_prompt = agent_config.get("system_prompt", "")

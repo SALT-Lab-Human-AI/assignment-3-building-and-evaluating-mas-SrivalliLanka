@@ -1,0 +1,51 @@
+======================================================================
+EVALUATION SUMMARY
+======================================================================
+
+OVERVIEW
+----------------------------------------------------------------------
+Total Queries: 10
+Successful: 10
+Failed: 0
+Success Rate: 100.00%
+
+SCORES
+----------------------------------------------------------------------
+Overall Average Score: 0.134
+
+Scores by Criterion:
+  relevance: 0.000
+  evidence_quality: 0.000
+  factual_accuracy: 0.000
+  safety_compliance: 0.890
+  clarity: 0.000
+
+Scores by Category:
+  unknown: 0.134
+
+======================================================================
+BEST AND WORST PERFORMING QUERIES
+======================================================================
+
+BEST:
+  Query: Compare different approaches to measuring user experience in mobile applications
+  Score: 0.150
+  Category: unknown
+
+WORST:
+  Query: What are ethical considerations in using AI for education?
+  Score: 0.068
+  Category: unknown
+
+======================================================================
+PERFORMANCE ANALYSIS
+======================================================================
+
+Score Distribution:
+  excellent (0.9-1.0): 0
+  good (0.7-0.89): 0
+  fair (0.5-0.69): 0
+  poor (0.0-0.49): 10
+
+Weakest Criterion: relevance (avg: 0.000)
+

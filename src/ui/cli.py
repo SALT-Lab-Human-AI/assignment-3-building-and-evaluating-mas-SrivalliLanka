@@ -25,13 +25,13 @@ class CLI:
     """
     Command-line interface for the research assistant.
 
-    TODO: YOUR CODE HERE
-    - Implement interactive prompt loop
-    - Display agent traces clearly
-    - Show citations and sources
-    - Indicate safety events (blocked/sanitized)
-    - Handle user commands (help, quit, clear, etc.)
-    - Format output nicely
+    Features:
+    - Interactive prompt loop for continuous querying
+    - Clear display of agent traces and conversation history
+    - Citation and source extraction and display
+    - Safety event indicators (blocked/sanitized content)
+    - User commands (help, quit, clear, stats)
+    - Formatted output with clear sections
     """
 
     def __init__(self, config_path: str = "config.yaml"):
@@ -79,12 +79,12 @@ class CLI:
         """
         Main CLI loop.
 
-        TODO: YOUR CODE HERE
-        - Implement interactive loop
-        - Handle user input
-        - Process queries through orchestrator
-        - Display results
-        - Handle errors gracefully
+        The method:
+        - Implements interactive loop for continuous querying
+        - Handles user input and commands
+        - Processes queries through orchestrator
+        - Displays formatted results with citations and traces
+        - Handles errors gracefully with informative messages
         """
         self._print_welcome()
 
@@ -170,6 +170,14 @@ class CLI:
         print(f"  System: {self.config.get('system', {}).get('name', 'Unknown')}")
         print(f"  Topic: {self.config.get('system', {}).get('topic', 'Unknown')}")
         print(f"  Model: {self.config.get('models', {}).get('default', {}).get('name', 'Unknown')}")
+        
+        # Safety statistics
+        if self.orchestrator and self.orchestrator.safety_manager:
+            safety_stats = self.orchestrator.safety_manager.get_safety_stats()
+            print(f"\nSafety Statistics:")
+            print(f"  Total safety events: {safety_stats.get('total_events', 0)}")
+            print(f"  Violations: {safety_stats.get('violations', 0)}")
+            print(f"  Violation rate: {safety_stats.get('violation_rate', 0.0):.2%}")
 
     def _display_result(self, result: Dict[str, Any]):
         """Display query result with formatting."""
@@ -182,28 +190,68 @@ class CLI:
             print(f"\n❌ Error: {result['error']}")
             return
 
+        # Check for safety blocking
+        metadata = result.get("metadata", {})
+        if metadata.get("safety_blocked"):
+            print("\n⚠️  RESPONSE BLOCKED BY SAFETY SYSTEM")
+            print("-" * 70)
+            violations = metadata.get("safety_violations", [])
+            for violation in violations:
+                severity = violation.get("severity", "unknown")
+                reason = violation.get("reason", "Unknown violation")
+                print(f"  [{severity.upper()}] {reason}")
+            print("\n" + result.get("response", "Response blocked"))
+            print("=" * 70 + "\n")
+            return
+
         # Display response
         response = result.get("response", "")
         print(f"\n{response}\n")
+
+        # Display safety events (if any, but not blocking)
+        safety_events = result.get("safety_events", [])
+        if safety_events:
+            print("\n" + "-" * 70)
+            print("🛡️  SAFETY EVENTS")
+            print("-" * 70)
+            for event in safety_events:
+                event_type = event.get("type", "unknown")
+                is_safe = event.get("safe", True)
+                violations = event.get("violations", [])
+                
+                if not is_safe:
+                    print(f"  ⚠️  {event_type.upper()}: {len(violations)} violation(s)")
+                    for v in violations:
+                        print(f"     • {v.get('reason', 'Unknown')}")
+                else:
+                    print(f"  ✅ {event_type.upper()}: Safety check passed")
 
         # Extract and display citations from conversation
         citations = self._extract_citations(result)
         if citations:
             print("\n" + "-" * 70)
-            print("📚 CITATIONS")
+            print("📚 CITATIONS & SOURCES")
             print("-" * 70)
             for i, citation in enumerate(citations, 1):
-                print(f"[{i}] {citation}")
+                if isinstance(citation, dict):
+                    cite_display = citation.get("display", citation.get("content", ""))
+                    print(f"[{i}] {cite_display}")
+                else:
+                    print(f"[{i}] {citation}")
 
         # Display metadata
-        metadata = result.get("metadata", {})
         if metadata:
             print("\n" + "-" * 70)
             print("📊 METADATA")
             print("-" * 70)
             print(f"  • Messages exchanged: {metadata.get('num_messages', 0)}")
             print(f"  • Sources gathered: {metadata.get('num_sources', 0)}")
-            print(f"  • Agents involved: {', '.join(metadata.get('agents_involved', []))}")
+            agents = metadata.get("agents_involved", [])
+            if agents:
+                print(f"  • Agents involved: {', '.join(agents)}")
+            quality_score = metadata.get("critique_score", 0)
+            if quality_score:
+                print(f"  • Quality score: {quality_score:.2f}/10.0")
 
         # Display conversation summary if verbose mode
         if self._should_show_traces():
@@ -214,6 +262,7 @@ class CLI:
     def _extract_citations(self, result: Dict[str, Any]) -> list:
         """Extract citations/URLs from conversation history."""
         citations = []
+        seen_urls = set()
         
         for msg in result.get("conversation_history", []):
             content = msg.get("content", "")
@@ -222,11 +271,36 @@ class CLI:
             import re
             urls = re.findall(r'https?://[^\s<>"{}|\\^`\[\]]+', content)
             
+            # Find citation patterns
+            citation_patterns = re.findall(r'\[Source: ([^\]]+)\]', content)
+            apa_patterns = re.findall(r'\(([A-Z][a-z]+(?:\s+et\s+al\.)?,\s+\d{4})\)', content)
+            
             for url in urls:
-                if url not in citations:
-                    citations.append(url)
+                if url not in seen_urls:
+                    seen_urls.add(url)
+                    citations.append({
+                        "type": "url",
+                        "content": url,
+                        "display": url
+                    })
+            
+            for citation in citation_patterns:
+                if citation not in [c.get("content", "") if isinstance(c, dict) else c for c in citations]:
+                    citations.append({
+                        "type": "source",
+                        "content": citation,
+                        "display": citation
+                    })
+            
+            for apa_cite in apa_patterns:
+                if apa_cite not in [c.get("content", "") if isinstance(c, dict) else c for c in citations]:
+                    citations.append({
+                        "type": "apa",
+                        "content": apa_cite,
+                        "display": f"({apa_cite})"
+                    })
         
-        return citations[:10]  # Limit to top 10
+        return citations[:15]  # Limit to top 15
 
     def _should_show_traces(self) -> bool:
         """Check if agent traces should be displayed."""
