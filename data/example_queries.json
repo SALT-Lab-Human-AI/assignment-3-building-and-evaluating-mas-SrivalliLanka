@@ -26,7 +26,7 @@
       "hardware improvements",
       "application domains"
     ],
-    "ground_truth": null,
+    "ground_truth": "AR usability has evolved significantly with improved hand tracking, spatial mapping, gesture recognition, and more intuitive interaction paradigms. Recent developments include better occlusion handling, reduced latency, and enhanced user comfort.",
     "expected_sources": [
       "recent AR research papers",
       "CHI conference proceedings",
@@ -44,7 +44,7 @@
       "transparency",
       "student autonomy"
     ],
-    "ground_truth": null,
+    "ground_truth": "Key ethical considerations include algorithmic bias and fairness, student data privacy, transparency in AI decision-making, accessibility for all learners, maintaining student autonomy, and ensuring equitable access to AI-enhanced educational tools.",
     "expected_sources": [
       "ethics papers",
       "educational technology research",

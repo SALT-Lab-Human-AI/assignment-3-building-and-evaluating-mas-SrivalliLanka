@@ -1,12 +1,11 @@
 autogen-agentchat
-autogen-ext[openai,groq]
+autogen-ext[openai]
 
 langgraph
 langchain
 langchain-core
 langchain-community
 
-groq
 openai
 
 guardrails-ai
@@ -35,5 +34,5 @@ black
 # Pre-commit hooks for security and code quality
 pre-commit
 detect-secrets
-gitleaks
+# gitleaks - not a Python package, install separately if needed
 bandit

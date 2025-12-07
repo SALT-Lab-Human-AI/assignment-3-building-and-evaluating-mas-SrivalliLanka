@@ -225,7 +225,20 @@ def web_search(query: str, provider: str = "tavily", max_results: int = 5) -> st
         Formatted string with search results
     """
     tool = WebSearchTool(provider=provider, max_results=max_results)
-    results = asyncio.run(tool.search(query))
+    # Handle both sync and async contexts
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # If we're in an async context, create a new event loop in a thread
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(_run_async_in_thread, tool.search(query))
+                results = future.result()
+        else:
+            results = loop.run_until_complete(tool.search(query))
+    except RuntimeError:
+        # No event loop exists, create a new one
+        results = asyncio.run(tool.search(query))
     
     if not results:
         return "No search results found."
@@ -242,3 +255,14 @@ def web_search(query: str, provider: str = "tavily", max_results: int = 5) -> st
         output += "\n"
     
     return output
+
+
+def _run_async_in_thread(coro):
+    """Helper to run async code in a new event loop in a thread."""
+    import asyncio
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()

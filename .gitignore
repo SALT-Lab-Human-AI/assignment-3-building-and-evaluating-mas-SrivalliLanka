@@ -212,9 +212,18 @@ logs/
 data/*.json
 data/*.csv
 !data/example_queries.json
-outputs/
-*.pkl
-*.pickle
+
+# Outputs - ignore temporary files but keep required artifacts
+outputs/*.pkl
+outputs/*.pickle
+# Keep evaluation artifacts, conversations, responses, and judge outputs for submission
+!outputs/sample_conversation_*.json
+!outputs/response_*.md
+!outputs/judge_outputs_*.json
+!outputs/evaluation_report_*.md
+!outputs/evaluation_*.json
+!outputs/EVALUATION_RESULTS_ANALYSIS.md
+!outputs/evaluation_summary_*.txt
 
 # Pre-commit
 .pre-commit-cache/

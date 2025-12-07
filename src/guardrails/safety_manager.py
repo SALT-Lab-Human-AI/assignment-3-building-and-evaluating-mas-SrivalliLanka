@@ -7,17 +7,28 @@ from typing import Dict, Any, List, Optional
 import logging
 from datetime import datetime
 import json
+import asyncio
+
+from src.guardrails.input_guardrail import InputGuardrail
+from src.guardrails.output_guardrail import OutputGuardrail
+from src.guardrails.llm_safety_helper import create_llm_client
+
+
+def _run_async_in_thread(coro):
+    """Helper to run async code in a new event loop in a thread."""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
 
 
 class SafetyManager:
     """
     Manages safety guardrails for the multi-agent system.
-
-    TODO: YOUR CODE HERE
-    - Integrate with Guardrails AI or NeMo Guardrails
-    - Define safety policies
-    - Implement logging of safety events
-    - Handle different violation types with appropriate responses
+    
+    Uses custom LLM-based safety checks with input and output guardrails.
     """
 
     def __init__(self, config: Dict[str, Any]):
@@ -46,13 +57,20 @@ class SafetyManager:
         # Violation response strategy
         self.on_violation = config.get("on_violation", {})
 
-        # TODO: Initialize guardrail framework
-        # Examples:
-        # from guardrails import Guard
-        # self.guard = Guard(...)
-        # OR
-        # from nemoguardrails import RailsConfig
-        # self.rails = RailsConfig(...)
+        # Initialize LLM client for safety checks
+        self.llm_client = create_llm_client(config)
+        
+        # Initialize input and output guardrails
+        self.input_guardrail = InputGuardrail(config)
+        self.output_guardrail = OutputGuardrail(config)
+        
+        # Get system topic from config (handle both nested and flat config structures)
+        system_config = config.get("system", {})
+        if isinstance(system_config, dict):
+            self.topic = system_config.get("topic", "HCI Research")
+        else:
+            # If config structure is different, try to get from root level
+            self.topic = config.get("topic", "HCI Research")
 
     def check_input_safety(self, query: str) -> Dict[str, Any]:
         """
@@ -63,42 +81,48 @@ class SafetyManager:
 
         Returns:
             Dictionary with 'safe' boolean and optional 'violations' list
-
-        TODO: YOUR CODE HERE
-        - Implement guardrail checks
-        - Detect harmful/inappropriate content
-        - Detect off-topic queries
-        - Return detailed violation information
         """
         if not self.enabled:
             return {"safe": True}
 
-        # TODO: Implement actual safety checks
-        # Example using Guardrails AI:
-        # result = self.guard.validate(query)
-        # if result.validation_passed:
-        #     return {"safe": True}
-        # else:
-        #     return {
-        #         "safe": False,
-        #         "violations": result.errors,
-        #         "sanitized_query": result.validated_output
-        #     }
-
-        # Placeholder implementation with simple keyword checks
-        violations = []
-
-        # Check for prohibited keywords (very basic example)
-        prohibited_keywords = ["hack", "attack", "exploit", "bypass"]
-        for keyword in prohibited_keywords:
-            if keyword.lower() in query.lower():
-                violations.append({
-                    "category": "potentially_harmful",
-                    "reason": f"Query contains prohibited keyword: {keyword}",
-                    "severity": "medium"
-                })
-
-        is_safe = len(violations) == 0
+        # Use input guardrail for validation
+        validation_result = self.input_guardrail.validate(query)
+        
+        if not validation_result.get("valid", True):
+            violations = validation_result.get("violations", [])
+            is_safe = False
+        else:
+            # Additional LLM-based safety check if client available
+            if self.llm_client:
+                try:
+                    # Run async LLM check
+                    loop = asyncio.get_event_loop()
+                    if loop.is_running():
+                        # If already in async context, create new loop in thread
+                        import concurrent.futures
+                        with concurrent.futures.ThreadPoolExecutor() as pool:
+                            future = pool.submit(_run_async_in_thread, self._check_input_llm(query))
+                            llm_result = future.result()
+                    else:
+                        llm_result = loop.run_until_complete(self._check_input_llm(query))
+                    
+                    if not llm_result.get("safe", True):
+                        violations = [{
+                            "category": llm_result.get("category", "unknown"),
+                            "reason": llm_result.get("reasoning", "LLM safety check failed"),
+                            "severity": llm_result.get("severity", "medium")
+                        }]
+                        is_safe = False
+                    else:
+                        violations = []
+                        is_safe = True
+                except Exception as e:
+                    self.logger.warning(f"LLM safety check failed, using guardrail result: {e}")
+                    violations = validation_result.get("violations", [])
+                    is_safe = len(violations) == 0
+            else:
+                violations = validation_result.get("violations", [])
+                is_safe = len(violations) == 0
 
         # Log safety event
         if not is_safe and self.log_events:
@@ -106,38 +130,65 @@ class SafetyManager:
 
         return {
             "safe": is_safe,
-            "violations": violations
+            "violations": violations,
+            "sanitized_query": validation_result.get("sanitized_input", query) if not is_safe else query
         }
+    
+    async def _check_input_llm(self, query: str) -> Dict[str, Any]:
+        """Async helper for LLM input safety check."""
+        from src.guardrails.llm_safety_helper import check_content_safety_llm
+        return await check_content_safety_llm(
+            self.llm_client,
+            query,
+            "input",
+            self.config,
+            self.topic
+        )
 
-    def check_output_safety(self, response: str) -> Dict[str, Any]:
+    def check_output_safety(self, response: str, sources: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
         """
         Check if output response is safe to return.
 
         Args:
             response: Generated response to check
+            sources: Optional list of sources used (for fact-checking)
 
         Returns:
             Dictionary with 'safe' boolean and optional 'violations' list
-
-        TODO: YOUR CODE HERE
-        - Implement output guardrail checks
-        - Detect harmful content in responses
-        - Detect potential misinformation
-        - Sanitize or redact unsafe content
         """
         if not self.enabled:
             return {"safe": True, "response": response}
 
-        # TODO: Implement actual output safety checks
-        # Example checks:
-        # - No PII (personal identifiable information)
-        # - No harmful instructions
-        # - Factual consistency
-        # - No bias or offensive language
+        # Use output guardrail for validation
+        validation_result = self.output_guardrail.validate(response, sources)
+        
+        violations = validation_result.get("violations", [])
+        
+        # Additional LLM-based safety check if client available
+        if self.llm_client:
+            try:
+                # Run async LLM check
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    import concurrent.futures
+                    with concurrent.futures.ThreadPoolExecutor() as pool:
+                        future = pool.submit(_run_async_in_thread, self._check_output_llm(response))
+                        llm_result = future.result()
+                else:
+                    llm_result = loop.run_until_complete(self._check_output_llm(response))
+                
+                if not llm_result.get("safe", True):
+                    llm_violations = llm_result.get("violations", [])
+                    for v in llm_violations:
+                        violations.append({
+                            "category": "harmful_content",
+                            "reason": llm_result.get("reasoning", "LLM detected unsafe content"),
+                            "severity": llm_result.get("severity", "medium"),
+                            "validator": "llm_safety_check"
+                        })
+            except Exception as e:
+                self.logger.warning(f"LLM output safety check failed, using guardrail result: {e}")
 
-        violations = []
-
-        # Placeholder implementation
         is_safe = len(violations) == 0
 
         # Log safety event
@@ -154,7 +205,7 @@ class SafetyManager:
         if not is_safe:
             action = self.on_violation.get("action", "refuse")
             if action == "sanitize":
-                result["response"] = self._sanitize_response(response, violations)
+                result["response"] = validation_result.get("sanitized_output", response)
             elif action == "refuse":
                 result["response"] = self.on_violation.get(
                     "message",
@@ -162,15 +213,25 @@ class SafetyManager:
                 )
 
         return result
+    
+    async def _check_output_llm(self, response: str) -> Dict[str, Any]:
+        """Async helper for LLM output safety check."""
+        from src.guardrails.llm_safety_helper import check_content_safety_llm
+        return await check_content_safety_llm(
+            self.llm_client,
+            response,
+            "output",
+            self.config,
+            self.topic
+        )
 
     def _sanitize_response(self, response: str, violations: List[Dict[str, Any]]) -> str:
         """
         Sanitize response by removing or redacting unsafe content.
-
-        TODO: YOUR CODE HERE Implement sanitization logic
         """
-        # Placeholder
-        return "[REDACTED] " + response
+        # Use output guardrail's sanitization
+        sanitized = self.output_guardrail._sanitize(response, violations)
+        return sanitized
 
     def _log_safety_event(
         self,

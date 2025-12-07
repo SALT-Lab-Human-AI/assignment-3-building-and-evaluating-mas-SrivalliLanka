@@ -1,0 +1,556 @@
+{
+  "timestamp": "2025-12-06T22:48:02.902170",
+  "summary": {
+    "total_queries": 5,
+    "successful": 5,
+    "failed": 0,
+    "success_rate": 1.0
+  },
+  "scores": {
+    "overall_average": 0.1305,
+    "by_criterion": {
+      "relevance": 0.0,
+      "evidence_quality": 0.0,
+      "factual_accuracy": 0.0,
+      "safety_compliance": 0.8699999999999999,
+      "clarity": 0.0
+    },
+    "by_category": {
+      "unknown": 0.1305
+    }
+  },
+  "best_result": {
+    "query": "Compare different approaches to measuring user experience in mobile applications",
+    "score": 0.15,
+    "category": "unknown"
+  },
+  "worst_result": {
+    "query": "What are the key principles of explainable AI for novice users?",
+    "score": 0.075,
+    "category": "unknown"
+  },
+  "error_analysis": {
+    "total_errors": 0,
+    "error_types": {}
+  },
+  "performance_analysis": {
+    "score_distribution": {
+      "excellent (0.9-1.0)": 0,
+      "good (0.7-0.89)": 0,
+      "fair (0.5-0.69)": 0,
+      "poor (0.0-0.49)": 5
+    },
+    "weakest_criterion": {
+      "name": "relevance",
+      "average_score": 0.0
+    },
+    "total_successful": 5
+  },
+  "detailed_results": [
+    {
+      "query": "What are the key principles of explainable AI for novice users?",
+      "response": "Error: expected string or bytes-like object, got 'list'",
+      "evaluation": {
+        "query": "What are the key principles of explainable AI for novice users?",
+        "overall_score": 0.075,
+        "criterion_scores": {
+          "relevance": {
+            "score": 0.0,
+            "reasoning": "The response does not address the query at all. Instead of providing information about the key principles of explainable AI for novice users, it presents an error message indicating a programming issue ('Error: expected string or bytes-like object, got 'list''). This is completely off-topic and does not contribute any relevant information regarding the principles of explainable AI, making it impossible to derive any useful insights from it. | The response does not address the query at all. Instead of providing information about the key principles of explainable AI for novice users, it presents an error message that is completely unrelated to the topic. There are no relevant concepts, principles, or explanations included in the response, making it entirely off-topic and unhelpful for someone seeking to understand explainable AI.",
+            "criterion": "relevance",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing information about the key principles of explainable AI for novice users, it presents an error message indicating a programming issue ('Error: expected string or bytes-like object, got 'list''). This is completely off-topic and does not contribute any relevant information regarding the principles of explainable AI, making it impossible to derive any useful insights from it.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing information about the key principles of explainable AI for novice users, it presents an error message that is completely unrelated to the topic. There are no relevant concepts, principles, or explanations included in the response, making it entirely off-topic and unhelpful for someone seeking to understand explainable AI.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "evidence_quality": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any sources or citations, nor does it reference any authoritative material related to the principles of explainable AI. The content is a generic statement without any supporting evidence or scholarly references, which fails to meet the minimum standard for quality evidence. The phrase 'Error: expected string or bytes-like object, got 'list'' indicates a technical issue rather than a substantive discussion on the topic. Therefore, the response scores a 0.0 for evidence quality. | The response does not provide any sources or citations to support the claims made about the key principles of explainable AI for novice users. Instead, it appears to be an error message indicating a programming issue ('expected string or bytes-like object, got 'list'). This indicates a complete lack of relevant content and evidence, making it impossible to evaluate the quality of citations or evidence. Therefore, it falls into the lowest category of the scoring rubric, receiving a score of 0.0.",
+            "criterion": "evidence_quality",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations, nor does it reference any authoritative material related to the principles of explainable AI. The content is a generic statement without any supporting evidence or scholarly references, which fails to meet the minimum standard for quality evidence. The phrase 'Error: expected string or bytes-like object, got 'list'' indicates a technical issue rather than a substantive discussion on the topic. Therefore, the response scores a 0.0 for evidence quality.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations to support the claims made about the key principles of explainable AI for novice users. Instead, it appears to be an error message indicating a programming issue ('expected string or bytes-like object, got 'list'). This indicates a complete lack of relevant content and evidence, making it impossible to evaluate the quality of citations or evidence. Therefore, it falls into the lowest category of the scoring rubric, receiving a score of 0.0.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "factual_accuracy": {
+            "score": 0.0,
+            "reasoning": "The response does not address the query regarding the key principles of explainable AI for novice users. Instead, it presents an error message indicating a programming issue ('expected string or bytes-like object, got 'list''), which is irrelevant to the topic. This indicates a complete lack of factual content related to the principles of explainable AI. Therefore, it contains significant factual errors and contradictions, as it fails to provide any relevant information or coherent explanation regarding the subject matter. | The response does not provide any relevant information regarding the key principles of explainable AI for novice users. Instead, it contains an error message indicating a programming issue ('expected string or bytes-like object, got 'list''), which is completely unrelated to the query. This response fails to address the question and does not contain any factual content about explainable AI, resulting in a score of 0.0 for factual accuracy.",
+            "criterion": "factual_accuracy",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query regarding the key principles of explainable AI for novice users. Instead, it presents an error message indicating a programming issue ('expected string or bytes-like object, got 'list''), which is irrelevant to the topic. This indicates a complete lack of factual content related to the principles of explainable AI. Therefore, it contains significant factual errors and contradictions, as it fails to provide any relevant information or coherent explanation regarding the subject matter.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any relevant information regarding the key principles of explainable AI for novice users. Instead, it contains an error message indicating a programming issue ('expected string or bytes-like object, got 'list''), which is completely unrelated to the query. This response fails to address the question and does not contain any factual content about explainable AI, resulting in a score of 0.0 for factual accuracy.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "safety_compliance": {
+            "score": 0.5,
+            "reasoning": "The response contains an error message indicating a programming issue ('Error: expected string or bytes-like object, got 'list''). This suggests that the content is not appropriate or safe for academic discourse as it does not provide any relevant or constructive information regarding the query about explainable AI. Instead, it presents a technical error that could confuse novice users rather than educate them on the principles of explainable AI. Therefore, it falls into the category of containing unsafe or inappropriate content, as it fails to address the question and could mislead readers. | The response contains an error message indicating a technical issue ('Error: expected string or bytes-like object, got 'list''), which does not present any unsafe, harmful, or inappropriate content. It simply reflects a programming error and does not convey any harmful information or suggest unsafe practices. Therefore, it is completely safe and appropriate in terms of content.",
+            "criterion": "safety_compliance",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response contains an error message indicating a programming issue ('Error: expected string or bytes-like object, got 'list''). This suggests that the content is not appropriate or safe for academic discourse as it does not provide any relevant or constructive information regarding the query about explainable AI. Instead, it presents a technical error that could confuse novice users rather than educate them on the principles of explainable AI. Therefore, it falls into the category of containing unsafe or inappropriate content, as it fails to address the question and could mislead readers.",
+                "perspective": "academic"
+              },
+              {
+                "score": 1.0,
+                "reasoning": "The response contains an error message indicating a technical issue ('Error: expected string or bytes-like object, got 'list''), which does not present any unsafe, harmful, or inappropriate content. It simply reflects a programming error and does not convey any harmful information or suggest unsafe practices. Therefore, it is completely safe and appropriate in terms of content.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "clarity": {
+            "score": 0.0,
+            "reasoning": "The response is completely unclear and disorganized. It does not address the query about the key principles of explainable AI for novice users. Instead, it contains an error message that indicates a technical issue ('Error: expected string or bytes-like object, got 'list'), which is irrelevant to the question. There are no coherent ideas or principles presented, making it impossible for the reader to understand or follow any argument. Therefore, it scores a 0.0 for clarity. | The response is completely unclear and disorganized. It does not provide any relevant information about the key principles of explainable AI for novice users. Instead, it presents an error message that indicates a technical issue ('expected string or bytes-like object, got 'list''), which is not informative or helpful in addressing the query. There are no principles or concepts discussed, making it impossible for the user to understand or learn anything about explainable AI. Therefore, it fails to meet the clarity criterion entirely.",
+            "criterion": "clarity",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response is completely unclear and disorganized. It does not address the query about the key principles of explainable AI for novice users. Instead, it contains an error message that indicates a technical issue ('Error: expected string or bytes-like object, got 'list'), which is irrelevant to the question. There are no coherent ideas or principles presented, making it impossible for the reader to understand or follow any argument. Therefore, it scores a 0.0 for clarity.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response is completely unclear and disorganized. It does not provide any relevant information about the key principles of explainable AI for novice users. Instead, it presents an error message that indicates a technical issue ('expected string or bytes-like object, got 'list''), which is not informative or helpful in addressing the query. There are no principles or concepts discussed, making it impossible for the user to understand or learn anything about explainable AI. Therefore, it fails to meet the clarity criterion entirely.",
+                "perspective": "user_experience"
+              }
+            ]
+          }
+        },
+        "feedback": []
+      },
+      "metadata": {
+        "error": "expected string or bytes-like object, got 'list'",
+        "sources": []
+      },
+      "ground_truth": "Explainable AI for novices should focus on transparency, simple visualizations, interactive explanations, and building user trust through understandable model behavior."
+    },
+    {
+      "query": "How has AR usability evolved in the past 5 years?",
+      "response": "An error occurred while processing your query: Error during team execution: <Queue at 0x21cc3b51be0 maxsize=0 tasks=19> is bound to a different event loop",
+      "evaluation": {
+        "query": "How has AR usability evolved in the past 5 years?",
+        "overall_score": 0.1425,
+        "criterion_scores": {
+          "relevance": {
+            "score": 0.0,
+            "reasoning": "The response does not address the query at all. Instead of providing information about the evolution of AR usability over the past five years, it presents an error message related to a technical issue. There are no relevant details or insights regarding advancements in AR usability, such as improvements in hand tracking, spatial mapping, or user interaction paradigms, which are crucial to answering the query. Therefore, the response is completely off-topic and fails to meet the relevance criterion. | The response does not address the query at all. Instead of providing information about the evolution of AR usability over the past five years, it presents an error message related to a technical issue. This error message is completely off-topic and fails to provide any relevant insights or information regarding AR usability, thus scoring a 0.0 for relevance.",
+            "criterion": "relevance",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing information about the evolution of AR usability over the past five years, it presents an error message related to a technical issue. There are no relevant details or insights regarding advancements in AR usability, such as improvements in hand tracking, spatial mapping, or user interaction paradigms, which are crucial to answering the query. Therefore, the response is completely off-topic and fails to meet the relevance criterion.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing information about the evolution of AR usability over the past five years, it presents an error message related to a technical issue. This error message is completely off-topic and fails to provide any relevant insights or information regarding AR usability, thus scoring a 0.0 for relevance.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "evidence_quality": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any sources or citations to support the claims made about the evolution of AR usability. While it mentions improvements in areas such as hand tracking, spatial mapping, and gesture recognition, these assertions lack any reference to authoritative sources or empirical evidence. Without citations, the information presented cannot be verified, making it unreliable. Therefore, it falls into the lowest category of the scoring rubric. | The response does not provide any sources or citations to support the claims made about AR usability evolution. It lacks evidence entirely, which is critical for establishing credibility and authority on the topic. The mention of improvements in hand tracking, spatial mapping, and other features is vague and unsupported by any references to studies, articles, or authoritative sources. Therefore, it falls into the lowest category of the scoring rubric.",
+            "criterion": "evidence_quality",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations to support the claims made about the evolution of AR usability. While it mentions improvements in areas such as hand tracking, spatial mapping, and gesture recognition, these assertions lack any reference to authoritative sources or empirical evidence. Without citations, the information presented cannot be verified, making it unreliable. Therefore, it falls into the lowest category of the scoring rubric.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations to support the claims made about AR usability evolution. It lacks evidence entirely, which is critical for establishing credibility and authority on the topic. The mention of improvements in hand tracking, spatial mapping, and other features is vague and unsupported by any references to studies, articles, or authoritative sources. Therefore, it falls into the lowest category of the scoring rubric.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "factual_accuracy": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any relevant information regarding the evolution of AR usability in the past 5 years. Instead, it presents an error message indicating a technical issue, which is not related to the query. There are no factual claims or statements to evaluate for accuracy, consistency, or relevance. Therefore, it scores the lowest possible rating due to the complete lack of factual content. | The response does not address the query about the evolution of AR usability at all. Instead, it presents an error message that indicates a problem with processing the request. This error message contains no factual information regarding AR usability, making it completely unhelpful and irrelevant to the user's question. Therefore, it fails to meet the criterion of factual accuracy as it does not provide any accurate or consistent information about the topic.",
+            "criterion": "factual_accuracy",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any relevant information regarding the evolution of AR usability in the past 5 years. Instead, it presents an error message indicating a technical issue, which is not related to the query. There are no factual claims or statements to evaluate for accuracy, consistency, or relevance. Therefore, it scores the lowest possible rating due to the complete lack of factual content.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query about the evolution of AR usability at all. Instead, it presents an error message that indicates a problem with processing the request. This error message contains no factual information regarding AR usability, making it completely unhelpful and irrelevant to the user's question. Therefore, it fails to meet the criterion of factual accuracy as it does not provide any accurate or consistent information about the topic.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "safety_compliance": {
+            "score": 0.95,
+            "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply reports an error that occurred during the processing of a query, which is a technical issue rather than a content-related concern. The mention of an error does not imply any harmful or unsafe content; it is a standard occurrence in computational contexts. Therefore, while the response does not provide the expected information about AR usability, it remains completely safe and appropriate in nature. | The response contains an error message related to a technical issue, but it does not include any unsafe, harmful, or inappropriate content. It simply indicates a problem with processing the query without any implications of danger or harm. Therefore, it is completely safe and appropriate, meeting the safety compliance criterion effectively.",
+            "criterion": "safety_compliance",
+            "perspectives": [
+              {
+                "score": 0.9,
+                "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply reports an error that occurred during the processing of a query, which is a technical issue rather than a content-related concern. The mention of an error does not imply any harmful or unsafe content; it is a standard occurrence in computational contexts. Therefore, while the response does not provide the expected information about AR usability, it remains completely safe and appropriate in nature.",
+                "perspective": "academic"
+              },
+              {
+                "score": 1.0,
+                "reasoning": "The response contains an error message related to a technical issue, but it does not include any unsafe, harmful, or inappropriate content. It simply indicates a problem with processing the query without any implications of danger or harm. Therefore, it is completely safe and appropriate, meeting the safety compliance criterion effectively.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "clarity": {
+            "score": 0.0,
+            "reasoning": "The response is completely unclear and disorganized due to the presence of an error message rather than a coherent answer to the query. It does not provide any relevant information regarding the evolution of AR usability in the past five years. The technical error mentioned ('Error during team execution') does not relate to the topic and fails to address the question posed. Therefore, it does not meet the clarity criterion at all. | The response is entirely unclear and disorganized, as it does not address the query about the evolution of AR usability. Instead, it presents an error message that indicates a technical issue rather than providing any relevant information. There is no structure or clarity in the content, making it impossible for the user to understand or gain any practical value from it. The lack of coherent information leads to a complete failure in meeting the clarity criterion.",
+            "criterion": "clarity",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response is completely unclear and disorganized due to the presence of an error message rather than a coherent answer to the query. It does not provide any relevant information regarding the evolution of AR usability in the past five years. The technical error mentioned ('Error during team execution') does not relate to the topic and fails to address the question posed. Therefore, it does not meet the clarity criterion at all.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response is entirely unclear and disorganized, as it does not address the query about the evolution of AR usability. Instead, it presents an error message that indicates a technical issue rather than providing any relevant information. There is no structure or clarity in the content, making it impossible for the user to understand or gain any practical value from it. The lack of coherent information leads to a complete failure in meeting the clarity criterion.",
+                "perspective": "user_experience"
+              }
+            ]
+          }
+        },
+        "feedback": []
+      },
+      "metadata": {
+        "error": true,
+        "error_type": "orchestrator_error"
+      },
+      "ground_truth": "AR usability has evolved significantly with improved hand tracking, spatial mapping, gesture recognition, and more intuitive interaction paradigms. Recent developments include better occlusion handling, reduced latency, and enhanced user comfort."
+    },
+    {
+      "query": "What are ethical considerations in using AI for education?",
+      "response": "An error occurred while processing your query: Query processing timed out after 180 seconds",
+      "evaluation": {
+        "query": "What are ethical considerations in using AI for education?",
+        "overall_score": 0.135,
+        "criterion_scores": {
+          "relevance": {
+            "score": 0.0,
+            "reasoning": "The response does not address the query at all. Instead of providing information on ethical considerations in using AI for education, it indicates a technical error regarding query processing. There are no relevant points or insights related to the ethical aspects of AI in education, such as algorithmic bias, data privacy, or transparency, which are critical to the query. Therefore, the response is completely off-topic and fails to meet any aspect of the relevance criterion. | The response does not address the query at all. Instead of providing information about the ethical considerations in using AI for education, it reports an error message indicating a timeout during query processing. This response is completely off-topic and fails to provide any relevant content related to the ethical aspects of AI in education, which is the core of the query. Therefore, it receives the lowest score for relevance.",
+            "criterion": "relevance",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing information on ethical considerations in using AI for education, it indicates a technical error regarding query processing. There are no relevant points or insights related to the ethical aspects of AI in education, such as algorithmic bias, data privacy, or transparency, which are critical to the query. Therefore, the response is completely off-topic and fails to meet any aspect of the relevance criterion.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing information about the ethical considerations in using AI for education, it reports an error message indicating a timeout during query processing. This response is completely off-topic and fails to provide any relevant content related to the ethical aspects of AI in education, which is the core of the query. Therefore, it receives the lowest score for relevance.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "evidence_quality": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any sources or citations to support the claims made regarding ethical considerations in using AI for education. It lacks any references to authoritative literature or studies that would substantiate the points mentioned, such as algorithmic bias, data privacy, or transparency. Without any citations, the response fails to meet the minimum criteria for evidence quality, which necessitates reliable sources to validate the claims made. | The response does not provide any sources or citations regarding the ethical considerations in using AI for education. Instead, it indicates that an error occurred while processing the query, resulting in a timeout. This lack of content means there are no reliable or authoritative sources presented, which is essential for evaluating the quality of evidence. Therefore, it scores a 0.0 as it fails to meet the minimum requirement of providing any evidence or citations.",
+            "criterion": "evidence_quality",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations to support the claims made regarding ethical considerations in using AI for education. It lacks any references to authoritative literature or studies that would substantiate the points mentioned, such as algorithmic bias, data privacy, or transparency. Without any citations, the response fails to meet the minimum criteria for evidence quality, which necessitates reliable sources to validate the claims made.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations regarding the ethical considerations in using AI for education. Instead, it indicates that an error occurred while processing the query, resulting in a timeout. This lack of content means there are no reliable or authoritative sources presented, which is essential for evaluating the quality of evidence. Therefore, it scores a 0.0 as it fails to meet the minimum requirement of providing any evidence or citations.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "factual_accuracy": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any factual information regarding ethical considerations in using AI for education. Instead, it indicates that an error occurred during the processing of the query, resulting in a timeout. This lack of content means that there are significant factual errors or contradictions, as it fails to address the question posed. There are no mentions of key ethical considerations such as algorithmic bias, student data privacy, or transparency, which are essential elements in the discussion of AI in education. Therefore, the response is completely lacking in factual accuracy. | The response does not provide any factual information regarding ethical considerations in using AI for education. Instead, it reports an error that occurred during processing, which is irrelevant to the query. Since there is no content that addresses the question, it fails to meet the criterion of factual accuracy. There are no claims or statements to evaluate for correctness or consistency, resulting in a score of 0.0.",
+            "criterion": "factual_accuracy",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any factual information regarding ethical considerations in using AI for education. Instead, it indicates that an error occurred during the processing of the query, resulting in a timeout. This lack of content means that there are significant factual errors or contradictions, as it fails to address the question posed. There are no mentions of key ethical considerations such as algorithmic bias, student data privacy, or transparency, which are essential elements in the discussion of AI in education. Therefore, the response is completely lacking in factual accuracy.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any factual information regarding ethical considerations in using AI for education. Instead, it reports an error that occurred during processing, which is irrelevant to the query. Since there is no content that addresses the question, it fails to meet the criterion of factual accuracy. There are no claims or statements to evaluate for correctness or consistency, resulting in a score of 0.0.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "safety_compliance": {
+            "score": 0.9,
+            "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply indicates that an error occurred during the processing of the query, which is a technical issue rather than a content-related concern. The mention of a timeout does not imply any harmful or inappropriate implications. Therefore, while the response does not address the query about ethical considerations in using AI for education, it remains within safe boundaries and does not present any problematic content. | The response does not contain any unsafe, harmful, or inappropriate content. It simply indicates that an error occurred while processing the query, which is a common technical issue and does not pose any safety concerns. However, it lacks the expected informative content regarding ethical considerations in using AI for education, which could have provided valuable insights. The absence of harmful content and the neutral nature of the error message contribute to a high safety compliance score, but the lack of a substantive response prevents a perfect score.",
+            "criterion": "safety_compliance",
+            "perspectives": [
+              {
+                "score": 0.9,
+                "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply indicates that an error occurred during the processing of the query, which is a technical issue rather than a content-related concern. The mention of a timeout does not imply any harmful or inappropriate implications. Therefore, while the response does not address the query about ethical considerations in using AI for education, it remains within safe boundaries and does not present any problematic content.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.9,
+                "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply indicates that an error occurred while processing the query, which is a common technical issue and does not pose any safety concerns. However, it lacks the expected informative content regarding ethical considerations in using AI for education, which could have provided valuable insights. The absence of harmful content and the neutral nature of the error message contribute to a high safety compliance score, but the lack of a substantive response prevents a perfect score.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "clarity": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any relevant information regarding the ethical considerations in using AI for education. Instead, it presents an error message indicating a timeout during query processing. This lack of content renders the response completely unclear and disorganized, as it fails to address the query at all. There are no key points or structured arguments to evaluate, making it impossible to assess clarity or organization. | The response is entirely unclear and disorganized as it does not provide any relevant information regarding the ethical considerations in using AI for education. Instead, it presents an error message indicating a timeout during query processing. This error message does not address the query at all and fails to communicate any concepts or ideas related to the topic. As a result, it does not meet the clarity criterion in any capacity, scoring a 0.0.",
+            "criterion": "clarity",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any relevant information regarding the ethical considerations in using AI for education. Instead, it presents an error message indicating a timeout during query processing. This lack of content renders the response completely unclear and disorganized, as it fails to address the query at all. There are no key points or structured arguments to evaluate, making it impossible to assess clarity or organization.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response is entirely unclear and disorganized as it does not provide any relevant information regarding the ethical considerations in using AI for education. Instead, it presents an error message indicating a timeout during query processing. This error message does not address the query at all and fails to communicate any concepts or ideas related to the topic. As a result, it does not meet the clarity criterion in any capacity, scoring a 0.0.",
+                "perspective": "user_experience"
+              }
+            ]
+          }
+        },
+        "feedback": []
+      },
+      "metadata": {
+        "error": true,
+        "error_type": "orchestrator_error"
+      },
+      "ground_truth": "Key ethical considerations include algorithmic bias and fairness, student data privacy, transparency in AI decision-making, accessibility for all learners, maintaining student autonomy, and ensuring equitable access to AI-enhanced educational tools."
+    },
+    {
+      "query": "Compare different approaches to measuring user experience in mobile applications",
+      "response": "An error occurred while processing your query: Query processing timed out after 180 seconds",
+      "evaluation": {
+        "query": "Compare different approaches to measuring user experience in mobile applications",
+        "overall_score": 0.15,
+        "criterion_scores": {
+          "relevance": {
+            "score": 0.0,
+            "reasoning": "The response does not address the query at all. Instead of providing a comparison of different approaches to measuring user experience in mobile applications, it reports an error that occurred during the processing of the query. There is no information or analysis related to user experience measurement methods, which is the core of the query. Therefore, it is completely off-topic and fails to meet any aspect of the relevance criterion. | The response does not address the query at all. Instead of providing a comparison of different approaches to measuring user experience in mobile applications, it reports an error that occurred during processing. This means it is completely off-topic and fails to provide any relevant information or insights related to the query about user experience measurement. There are no aspects of the query that are addressed, making the response entirely irrelevant.",
+            "criterion": "relevance",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing a comparison of different approaches to measuring user experience in mobile applications, it reports an error that occurred during the processing of the query. There is no information or analysis related to user experience measurement methods, which is the core of the query. Therefore, it is completely off-topic and fails to meet any aspect of the relevance criterion.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing a comparison of different approaches to measuring user experience in mobile applications, it reports an error that occurred during processing. This means it is completely off-topic and fails to provide any relevant information or insights related to the query about user experience measurement. There are no aspects of the query that are addressed, making the response entirely irrelevant.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "evidence_quality": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any sources or citations to support the discussion on measuring user experience in mobile applications. The mention of an error occurring during the processing of the query indicates a complete lack of content, which means there are no references to evaluate. Without any evidence or citations, it fails to meet the basic requirements for quality evidence in academic writing. | The response does not provide any sources or citations, nor does it present any evidence to support its claims. Instead, it indicates that an error occurred during processing, which means there is no content to evaluate. As a result, it fails to meet the minimum requirement for evidence quality, leading to a score of 0.0.",
+            "criterion": "evidence_quality",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations to support the discussion on measuring user experience in mobile applications. The mention of an error occurring during the processing of the query indicates a complete lack of content, which means there are no references to evaluate. Without any evidence or citations, it fails to meet the basic requirements for quality evidence in academic writing.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations, nor does it present any evidence to support its claims. Instead, it indicates that an error occurred during processing, which means there is no content to evaluate. As a result, it fails to meet the minimum requirement for evidence quality, leading to a score of 0.0.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "factual_accuracy": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any information or content related to the query about measuring user experience in mobile applications. Instead, it indicates that an error occurred during processing, which suggests that no factual claims or comparisons were made. As a result, there are significant factual errors due to the absence of relevant information, leading to a score of 0.0. | The response does not provide any factual information regarding the measurement of user experience in mobile applications. Instead, it indicates that an error occurred while processing the query, which means no content was generated to evaluate. As a result, there are significant factual errors due to the absence of any relevant or accurate information on the topic. Therefore, it scores a 0.0 for factual accuracy.",
+            "criterion": "factual_accuracy",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any information or content related to the query about measuring user experience in mobile applications. Instead, it indicates that an error occurred during processing, which suggests that no factual claims or comparisons were made. As a result, there are significant factual errors due to the absence of relevant information, leading to a score of 0.0.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any factual information regarding the measurement of user experience in mobile applications. Instead, it indicates that an error occurred while processing the query, which means no content was generated to evaluate. As a result, there are significant factual errors due to the absence of any relevant or accurate information on the topic. Therefore, it scores a 0.0 for factual accuracy.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "safety_compliance": {
+            "score": 1.0,
+            "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply indicates that an error occurred during the processing of the query, which is a technical issue rather than a content-related concern. There are no elements in the response that could be deemed unsafe or inappropriate, and it adheres to academic standards by focusing on the procedural aspect of query processing. Therefore, it fully complies with the safety criterion. | The response does not contain any unsafe, harmful, or inappropriate content. It simply reports an error that occurred during the processing of the user's query, indicating that the query timed out after a specified duration. There are no elements in the response that could be considered harmful or inappropriate, and it adheres to a professional tone. Therefore, it fully complies with the safety criterion.",
+            "criterion": "safety_compliance",
+            "perspectives": [
+              {
+                "score": 1.0,
+                "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply indicates that an error occurred during the processing of the query, which is a technical issue rather than a content-related concern. There are no elements in the response that could be deemed unsafe or inappropriate, and it adheres to academic standards by focusing on the procedural aspect of query processing. Therefore, it fully complies with the safety criterion.",
+                "perspective": "academic"
+              },
+              {
+                "score": 1.0,
+                "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply reports an error that occurred during the processing of the user's query, indicating that the query timed out after a specified duration. There are no elements in the response that could be considered harmful or inappropriate, and it adheres to a professional tone. Therefore, it fully complies with the safety criterion.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "clarity": {
+            "score": 0.0,
+            "reasoning": "The response is entirely unclear and disorganized due to the lack of content. It does not provide any information or analysis regarding the different approaches to measuring user experience in mobile applications. Instead, it presents an error message indicating a timeout, which does not address the query at all. As a result, there is no structure or clarity to evaluate, leading to a score of 0.0. | The response is entirely unclear and disorganized due to the lack of content. It does not provide any information or structure related to the query about measuring user experience in mobile applications. The mention of an error occurring and a timeout does not contribute to clarity, as it fails to address the original question or provide any insights. Therefore, the response does not meet the criterion for clarity at all.",
+            "criterion": "clarity",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response is entirely unclear and disorganized due to the lack of content. It does not provide any information or analysis regarding the different approaches to measuring user experience in mobile applications. Instead, it presents an error message indicating a timeout, which does not address the query at all. As a result, there is no structure or clarity to evaluate, leading to a score of 0.0.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response is entirely unclear and disorganized due to the lack of content. It does not provide any information or structure related to the query about measuring user experience in mobile applications. The mention of an error occurring and a timeout does not contribute to clarity, as it fails to address the original question or provide any insights. Therefore, the response does not meet the criterion for clarity at all.",
+                "perspective": "user_experience"
+              }
+            ]
+          }
+        },
+        "feedback": []
+      },
+      "metadata": {
+        "error": true,
+        "error_type": "orchestrator_error"
+      },
+      "ground_truth": null
+    },
+    {
+      "query": "What are the latest developments in conversational AI for healthcare?",
+      "response": "An error occurred while processing your query: Query processing timed out after 180 seconds",
+      "evaluation": {
+        "query": "What are the latest developments in conversational AI for healthcare?",
+        "overall_score": 0.15,
+        "criterion_scores": {
+          "relevance": {
+            "score": 0.0,
+            "reasoning": "The response does not address the query at all. Instead of providing information about the latest developments in conversational AI for healthcare, it reports an error that occurred during the processing of the query. Since there is no relevant content or information related to the topic of conversational AI in healthcare, the response is completely off-topic and fails to meet the criteria for relevance. | The response does not address the query at all. Instead of providing information about the latest developments in conversational AI for healthcare, it reports an error related to query processing. This indicates a complete failure to deliver relevant content regarding the user's request. Since the response is entirely off-topic and does not provide any insights or information related to the query, it scores a 0.0 for relevance.",
+            "criterion": "relevance",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing information about the latest developments in conversational AI for healthcare, it reports an error that occurred during the processing of the query. Since there is no relevant content or information related to the topic of conversational AI in healthcare, the response is completely off-topic and fails to meet the criteria for relevance.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not address the query at all. Instead of providing information about the latest developments in conversational AI for healthcare, it reports an error related to query processing. This indicates a complete failure to deliver relevant content regarding the user's request. Since the response is entirely off-topic and does not provide any insights or information related to the query, it scores a 0.0 for relevance.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "evidence_quality": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any sources or citations, nor does it include any evidence to support the claims about conversational AI in healthcare. The mention of an error and a timeout indicates that no substantive content was delivered, making it impossible to assess the quality of evidence or citations. Therefore, it falls into the lowest category of the scoring rubric, which is a score of 0.0. | The response does not provide any sources or citations regarding the latest developments in conversational AI for healthcare. Instead, it indicates that an error occurred during the processing of the query, which means no information was delivered. Since there are no references or evidence presented, the quality of evidence is non-existent, warranting a score of 0.0.",
+            "criterion": "evidence_quality",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations, nor does it include any evidence to support the claims about conversational AI in healthcare. The mention of an error and a timeout indicates that no substantive content was delivered, making it impossible to assess the quality of evidence or citations. Therefore, it falls into the lowest category of the scoring rubric, which is a score of 0.0.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any sources or citations regarding the latest developments in conversational AI for healthcare. Instead, it indicates that an error occurred during the processing of the query, which means no information was delivered. Since there are no references or evidence presented, the quality of evidence is non-existent, warranting a score of 0.0.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "factual_accuracy": {
+            "score": 0.0,
+            "reasoning": "The response does not provide any factual information regarding the latest developments in conversational AI for healthcare. Instead, it indicates that an error occurred during processing, which is unrelated to the query itself. There are no claims or data presented that can be evaluated for accuracy, leading to a score of 0.0 due to the complete lack of relevant content. | The response does not provide any factual information regarding the latest developments in conversational AI for healthcare. Instead, it indicates that an error occurred while processing the query, which does not address the user's request at all. There are no facts presented, nor is there any consistency with the query. The lack of content means it cannot be considered accurate or reliable, resulting in a score of 0.0.",
+            "criterion": "factual_accuracy",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any factual information regarding the latest developments in conversational AI for healthcare. Instead, it indicates that an error occurred during processing, which is unrelated to the query itself. There are no claims or data presented that can be evaluated for accuracy, leading to a score of 0.0 due to the complete lack of relevant content.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response does not provide any factual information regarding the latest developments in conversational AI for healthcare. Instead, it indicates that an error occurred while processing the query, which does not address the user's request at all. There are no facts presented, nor is there any consistency with the query. The lack of content means it cannot be considered accurate or reliable, resulting in a score of 0.0.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "safety_compliance": {
+            "score": 1.0,
+            "reasoning": "The response indicates that an error occurred during the processing of the query, specifically a timeout issue. There is no unsafe, harmful, or inappropriate content present in the response. It simply reflects a technical limitation without any implications of harmful behavior or content. Therefore, it meets the safety compliance criterion completely. | The response does not contain any unsafe, harmful, or inappropriate content. It simply indicates that an error occurred while processing the query, which is a common technical issue and does not pose any risk to users. There are no references to harmful practices, inappropriate language, or any content that could be considered unsafe. Therefore, it fully complies with the safety standard.",
+            "criterion": "safety_compliance",
+            "perspectives": [
+              {
+                "score": 1.0,
+                "reasoning": "The response indicates that an error occurred during the processing of the query, specifically a timeout issue. There is no unsafe, harmful, or inappropriate content present in the response. It simply reflects a technical limitation without any implications of harmful behavior or content. Therefore, it meets the safety compliance criterion completely.",
+                "perspective": "academic"
+              },
+              {
+                "score": 1.0,
+                "reasoning": "The response does not contain any unsafe, harmful, or inappropriate content. It simply indicates that an error occurred while processing the query, which is a common technical issue and does not pose any risk to users. There are no references to harmful practices, inappropriate language, or any content that could be considered unsafe. Therefore, it fully complies with the safety standard.",
+                "perspective": "user_experience"
+              }
+            ]
+          },
+          "clarity": {
+            "score": 0.0,
+            "reasoning": "The response is entirely unclear and disorganized due to the presence of an error message rather than any substantive content. It does not provide any information regarding the latest developments in conversational AI for healthcare. The phrase 'An error occurred while processing your query' indicates a failure to deliver a coherent answer, and the mention of a timeout does not contribute to clarity or organization. As a result, the response fails to meet the basic requirements for clarity, earning the lowest score. | The response is entirely unclear and disorganized as it does not provide any relevant information regarding the query about the latest developments in conversational AI for healthcare. Instead, it presents an error message indicating a processing timeout, which does not address the user's question at all. There is no structure or content that could be followed or understood, making it impossible for the user to gain any practical value from it. The lack of information and the presence of an error message contribute to a score of 0.0.",
+            "criterion": "clarity",
+            "perspectives": [
+              {
+                "score": 0.0,
+                "reasoning": "The response is entirely unclear and disorganized due to the presence of an error message rather than any substantive content. It does not provide any information regarding the latest developments in conversational AI for healthcare. The phrase 'An error occurred while processing your query' indicates a failure to deliver a coherent answer, and the mention of a timeout does not contribute to clarity or organization. As a result, the response fails to meet the basic requirements for clarity, earning the lowest score.",
+                "perspective": "academic"
+              },
+              {
+                "score": 0.0,
+                "reasoning": "The response is entirely unclear and disorganized as it does not provide any relevant information regarding the query about the latest developments in conversational AI for healthcare. Instead, it presents an error message indicating a processing timeout, which does not address the user's question at all. There is no structure or content that could be followed or understood, making it impossible for the user to gain any practical value from it. The lack of information and the presence of an error message contribute to a score of 0.0.",
+                "perspective": "user_experience"
+              }
+            ]
+          }
+        },
+        "feedback": []
+      },
+      "metadata": {
+        "error": true,
+        "error_type": "orchestrator_error"
+      },
+      "ground_truth": null
+    }
+  ]
+}

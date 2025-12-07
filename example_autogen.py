@@ -194,7 +194,6 @@ def check_setup():
         "Environment file (.env)": os.path.exists(".env"),
         "Config file (config.yaml)": os.path.exists("config.yaml"),
         "Logs directory": os.path.exists("logs"),
-        "GROQ_API_KEY": bool(os.getenv("GROQ_API_KEY")),
         "OPENAI_API_KEY": bool(os.getenv("OPENAI_API_KEY")),
         "TAVILY_API_KEY": bool(os.getenv("TAVILY_API_KEY")),
     }
@@ -210,11 +209,11 @@ def check_setup():
             all_good = False
     
     print("\nRequired API Keys:")
-    print("  - At least one LLM key (GROQ_API_KEY or OPENAI_API_KEY)")
+    print("  - LLM key (OPENAI_API_KEY)")
     print("  - At least one search key (TAVILY_API_KEY recommended)")
     
-    if not checks["GROQ_API_KEY"] and not checks["OPENAI_API_KEY"]:
-        print("\n⚠ Warning: No LLM API key found. Please add one to .env")
+    if not checks["OPENAI_API_KEY"]:
+        print("\n⚠ Warning: No LLM API key found. Please add OPENAI_API_KEY to .env")
     
     if not checks["TAVILY_API_KEY"]:
         print("\n⚠ Warning: No search API key found. Research capabilities will be limited.")
